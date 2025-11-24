@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Обратный отсчёт до 24 мая 2026</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #222 0, #050505 55%, #000 100%);
+      color: #f5f5f5;
+    }
+
+    .wrapper {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      max-width: 600px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.03em;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      opacity: 0.8;
+      margin-bottom: 2rem;
+    }
+
+    .countdown {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .block {
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 1rem;
+      padding: 1rem 1.25rem;
+      min-width: 90px;
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .block:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.85);
+    }
+
+    .value {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+    }
+
+    .label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      opacity: 0.75;
+    }
+
+    .days .value {
+      font-size: 2.6rem;
+    }
+
+    .status {
+      margin-top: 1.8rem;
+      font-size: 0.9rem;
+      opacity: 0.85;
+    }
+
+    .status span {
+      opacity: 0.7;
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.4rem;
+      }
+      .subtitle {
+        font-size: 0.85rem;
+      }
+      .block {
+        padding: 0.8rem 1rem;
+        min-width: 80px;
+      }
+      .value {
+        font-size: 1.6rem;
+      }
+      .days .value {
+        font-size: 2.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <h1>Обратный отсчёт до 24 мая 2026</h1>
+    <p class="subtitle">Осталось у Майкла для лишения девственности</p>
+
+    <div class="countdown" id="countdown">
+      <div class="block days">
+        <div class="value" id="days">0</div>
+        <div class="label">дней</div>
+      </div>
+      <div class="block">
+        <div class="value" id="hours">0</div>
+        <div class="label">часов</div>
+      </div>
+      <div class="block">
+        <div class="value" id="minutes">0</div>
+        <div class="label">минут</div>
+      </div>
+      <div class="block">
+        <div class="value" id="seconds">0</div>
+        <div class="label">секунд</div>
+      </div>
+    </div>
+
+    <p class="status" id="status"></p>
+  </div>
+
+  <script>
+    (function () {
+      // Целевая дата – 24 мая 2026, 00:00:00 по локальному времени браузера
+      const targetDate = new Date(2026, 4, 24, 0, 0, 0); // Месяцы с 0, поэтому 4 = май
+
+      const daysEl = document.getElementById("days");
+      const hoursEl = document.getElementById("hours");
+      const minutesEl = document.getElementById("minutes");
+      const secondsEl = document.getElementById("seconds");
+      const statusEl = document.getElementById("status");
+
+      function pad(num) {
+        return num.toString().padStart(2, "0");
+      }
+
+      function updateCountdown() {
+        const now = new Date();
+        const diff = targetDate.getTime() - now.getTime();
+
+        if (diff <= 0) {
+          // Уже наступило 24 мая 2026
+          daysEl.textContent = "0";
+          hoursEl.textContent = "00";
+          minutesEl.textContent = "00";
+          secondsEl.textContent = "00";
+          statusEl.innerHTML = "🎉 Наступило <strong>24 мая 2026</strong>. Если ты ничего не успел — это уже традиция.";
+          return;
+        }
+
+        const totalSeconds = Math.floor(diff / 1000);
+
+        const days = Math.floor(totalSeconds / (60 * 60 * 24));
+        const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+        const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+        const seconds = totalSeconds % 60;
+
+        daysEl.textContent = days;
+        hoursEl.textContent = pad(hours);
+        minutesEl.textContent = pad(minutes);
+        secondsEl.textContent = pad(seconds);
+
+        statusEl.innerHTML =
+          "<span>Текущее локальное время твоего устройства: " +
+          now.toLocaleString() +
+          "</span>";
+      }
+
+      // Первый вызов сразу
+      updateCountdown();
+      // Обновление каждую секунду
+      setInterval(updateCountdown, 1000);
+    })();
+  </script>
+</body>
+</html>
